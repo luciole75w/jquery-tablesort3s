@@ -1,0 +1,24 @@
+/**
+ * Example of styling for the jquery.tablesort3s widget.
+ */
+thead .sort
+{
+	margin-top: 4px;
+}
+thead .sort div
+{
+	display: inline-block;
+	width: 12px;
+	height: 12px;
+	text-indent: -10000px;
+	overflow: hidden;
+	background: url('sort-icons.gif') no-repeat;
+	cursor: pointer;
+}
+thead .sort .sort-asc			{ background-position: 0px 0px; }
+thead .sort .sort-asc:hover		{ background-position: 0px -12px; }
+thead .sort .sort-desc 			{ background-position: -12px 0px; }
+thead .sort .sort-desc:hover	{ background-position: -12px -12px; }
+thead .sort div.sort-on			{ background-position: -24px 0px; }
+thead .sort div.sort-on:hover	{ background-position: -24px -12px; }
+thead .sort div:first-child		{ margin-right: 4px; }
