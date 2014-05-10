@@ -107,6 +107,12 @@ License
 [Mozilla Public License 2.0](http://mozilla.org/MPL/2.0/)
 
 
+Credits
+------------------
+
+[UglifyJS 2](https://github.com/mishoo/UglifyJS2) for the minified version.
+
+
 Future development
 ------------------
 
