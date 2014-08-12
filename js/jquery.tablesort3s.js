@@ -99,7 +99,7 @@ SortableRow.comparator = function(column, ascending)
 		else if (k1.text > k2.text)
 			res = 1;
 		else
-			res = r1.rank - r2.rank;
+			return r1.rank - r2.rank; // always ascending on initial rank for same content (stable)
 
 		return ascending ? res : -res;
 	};
