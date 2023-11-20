@@ -12,7 +12,7 @@ thead .sort div
 	height: 12px;
 	text-indent: -10000px;
 	overflow: hidden;
-	background: url('sort-icons.gif') no-repeat;
+	background: url('sort-icons.png') no-repeat;
 	cursor: pointer;
 }
 thead .sort .sort-asc			{ background-position: 0px 0px; }
