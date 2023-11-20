@@ -9,7 +9,7 @@ Tables can have **fake** rows, that is non-sortable data, such as group labels o
 Demo
 ------------------
 
-* cf. /demo/msf-2012.html
+* cf. /demo/msf-2012.html in repository or [online version](https://plnkr.co/plunk/GB3If0QJ8hPOcMrp)
 
 
 Code examples
