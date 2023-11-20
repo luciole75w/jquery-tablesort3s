@@ -9,7 +9,7 @@ Tables can have **fake** rows, that is non-sortable data, such as group labels o
 Demo
 ------------------
 
-* [demo/msf-2012](https://googledrive.com/host/0Bxvhe0zYf97vdGplbFhWdmxXc2s/demo-msf-2012.html)
+* cf. /demo/msf-2012.html
 
 
 Code examples
@@ -54,12 +54,12 @@ Supported options
     0-based index of the header row to bind widgets on.  
     Default : 0.
 
-* **fakeFilter** : selector or function suitable for the jQuery method [`.is()`](http://api.jquery.com/is/)  
-    Applied on [`<tr>`](http://www.w3.org/TR/DOM-Level-2-HTML/html.html#ID-6986576) elements to check fakes.  
+* **fakeFilter** : selector or function suitable for the jQuery method [`.is()`](https://api.jquery.com/is/)
+    Applied on [`<tr>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tr) elements to check fakes.
     Default : row containing at least one cell having a colspan > 1.
 
-* **noSortFilter** : selector or function suitable for the jQuery method [`.not()`](http://api.jquery.com/not/)  
-    Applied on [`<th>`](http://www.w3.org/TR/DOM-Level-2-HTML/html.html#ID-82915075) elements to prevent widget binding individually.  
+* **noSortFilter** : selector or function suitable for the jQuery method [`.not()`](https://api.jquery.com/not/)
+    Applied on [`<th>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/th) elements to prevent widget binding individually.
     Default : the class selector `.nosort`.
 
 * **widgetClass** : string  
@@ -104,13 +104,13 @@ All decent browsers. IE (6 and later) as well.
 License
 ------------------
 
-[Mozilla Public License 2.0](http://mozilla.org/MPL/2.0/)
+[Mozilla Public License 2.0](https://www.mozilla.org/en-US/MPL/2.0/)
 
 
 Credits
 ------------------
 
-[UglifyJS 2](https://github.com/mishoo/UglifyJS2) for the minified version.
+[UglifyJS](https://github.com/mishoo/UglifyJS) for the minified version.
 
 
 Future development
