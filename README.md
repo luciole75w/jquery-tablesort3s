@@ -47,8 +47,8 @@ Supported options
 ------------------
 
 * **hints** : array of 4 strings (see examples above)  
-    The 2 first strings are also used for the text content of the controls (for accessibility).  
-    Default : no hints and "+/-" for text.
+    These labels are used as hints (tooltips) and also as text content of the controls (for accessibility).
+    Default : `['+', '-', 'x', 'x']`.
 
 * **headerRow** : number  
     0-based index of the header row to bind widgets on.  
@@ -78,12 +78,12 @@ Each header cell surviving the noSortFilter will be granted the following UI awa
 
 ```html  
 <div class="sort">  
-	<div class="sort-asc [sort-on]"> hint[0] </div>  
-	<div class="sort-desc [sort-on]"> hint[1] </div>  
+	<button class="sort-asc [sort-on]"> hint[0] </button>
+	<button class="sort-desc [sort-on]"> hint[1] </button>
 </div>
 ```
 
-The inner `<div>` elements receive the additional class "sort-on" when they become active (mutually exclusive), either via an UI event or from code.
+The inner `<button>` elements receive the additional class "sort-on" when they become active (mutually exclusive), either via an UI event or from code.
 
 See the file "css/tablesort3s.css" for an example of widget styling.
 

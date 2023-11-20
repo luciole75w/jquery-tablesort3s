@@ -1,24 +1,23 @@
 /**
  * Example of styling for the jquery.tablesort3s widget.
  */
-thead .sort
-{
+thead .sort {
 	margin-top: 4px;
 }
-thead .sort div
-{
+thead .sort button {
 	display: inline-block;
 	width: 12px;
 	height: 12px;
 	text-indent: -10000px;
 	overflow: hidden;
 	background: url('sort-icons.png') no-repeat;
+	border: none;
 	cursor: pointer;
 }
-thead .sort .sort-asc			{ background-position: 0px 0px; }
-thead .sort .sort-asc:hover		{ background-position: 0px -12px; }
-thead .sort .sort-desc 			{ background-position: -12px 0px; }
-thead .sort .sort-desc:hover	{ background-position: -12px -12px; }
-thead .sort div.sort-on			{ background-position: -24px 0px; }
-thead .sort div.sort-on:hover	{ background-position: -24px -12px; }
-thead .sort div:first-child		{ margin-right: 4px; }
+thead .sort button:first-child {
+	margin-right: 4px;
+}
+thead .sort .sort-asc		{ background-position: 0px 0px; }
+thead .sort .sort-desc 		{ background-position: -12px 0px; }
+thead .sort button.sort-on	{ background-position-x: -24px; }
+thead .sort button:hover	{ background-position-y: -12px; }

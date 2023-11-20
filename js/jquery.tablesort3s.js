@@ -119,6 +119,8 @@ class SortableRow {
 // options supported so far : hints, headerRow, fakeFilter, noSortFilter, widgetClass, forceUI
 //
 class TableSorter {
+	static defaultHints = ['+', '-', 'x', 'x'];
+
 	constructor(table, options) {
 		this.headerCells = table.tHead.rows[options.headerRow || 0].cells;
 
@@ -126,39 +128,42 @@ class TableSorter {
 			return new SortableRow(row, options.fakeFilter); // sortable version of the original data
 		});
 
-		this.hinter = options.hints === undefined ? '' : function() {
+		this.hinter = function() {
 			const hintIndex = 2 * $(this).hasClass('sort-on') + !$(this).hasClass('sort-asc');
-			return options.hints[hintIndex];
+			return (options.hints || TableSorter.defaultHints)[hintIndex];
 		};
 
 		if (this.source.length > 1 || options.forceUI)
-			this.bindWidgets(this, options.noSortFilter, options.hints, options.widgetClass);
+			this.bindWidgets(this, options.noSortFilter, options.widgetClass);
 	}
 
 	//----------------------------------------------------------------------------
 	// Bind 2 sort buttons on each column unless its header please the filter (class selector
 	// '.nosort' by default)
 	//
-	bindWidgets(sorter, filter, hints, widgetClass) {
+	bindWidgets(sorter, filter, widgetClass) {
 		$(this.headerCells)
 			.not(filter !== undefined ? filter : '.nosort')
 			.each(function(i, cell) {
 				const $sortWidget = $('<div>')
 					.addClass(widgetClass || 'sort')
-					.append($('<div>').addClass('sort-asc').text(hints ? hints[0] : '+'))
-					.append($('<div>').addClass('sort-desc').text(hints ? hints[1] : '-'));
+					.append($('<button class="sort-asc" />'))
+					.append($('<button class="sort-desc" />'));
 
 				// common settings for ascending and descending buttons
 				$sortWidget.children()
-					.click(function() {
+					.on('click', function() {
 						sorter.sort(
 							$(this).hasClass('sort-on') ? false : cell.cellIndex,
 							$(this).hasClass('sort-asc'));
 					})
-					.keyup(function(e) { if (e.which == 13) this.click(); })
-					.attr({ tabindex: 0, title: sorter.hinter });
+					.attr({
+						type: 'button', // in case the table is in a form
+						title: sorter.hinter,
+					})
+					.text(function() { return this.title; });
 
-				$sortWidget.appendTo(this);
+				$sortWidget.appendTo(cell);
 			});
 	}
 
@@ -170,12 +175,14 @@ class TableSorter {
 		// update the state of header buttons
 		$('.sort-on', this.headerCells)
 			.removeClass('sort-on')
-			.attr('title', this.hinter);
+			.attr('title', this.hinter)
+			.text(function() { return this.title; });
 
 		if (column !== false)
 			$(ascending ? '.sort-asc' : '.sort-desc', this.headerCells[column])
 				.addClass('sort-on')
-				.attr('title', this.hinter);
+				.attr('title', this.hinter)
+				.text(function() { return this.title; });
 		
 		// sort/unsort the row source in memory
 		this.source.sort(SortableRow.comparator(column, ascending));
