@@ -121,13 +121,39 @@ class SortableRow {
 
 //----------------------------------------------------------------------------
 // TableSorter class
-// options supported so far : hints, headerRow, fakeFilter, noSortFilter, widgetClass, forceUI
+// options supported so far : hints, widgetsRow, fakeFilter, noSortFilter, widgetClass, forceUI
 //
 class TableSorter {
 	static defaultHints = ['+', '-', 'x', 'x'];
 
+	// for each column, select the last (bottom-most) <th> element (<td> ignored)
+	// with colspan = 1 (multicolumn sort not supported)
+	static getColumnHeaders(thead) {
+		const nbCols = Array.prototype.reduce.call(thead.rows[0].cells, (accum, cell) => accum + cell.colSpan, 0);
+		const colProgress = new Array(nbCols).fill(0);
+		const colHeaders = new Array(nbCols);
+
+		for (const row of thead.rows) {
+			let x = 0;
+
+			for (const cell of row.cells) {
+				while (colProgress[x] > row.rowIndex)
+					++x;
+
+				if (cell.colSpan === 1 && cell.tagName === 'TH')
+					colHeaders[x] = cell;
+
+				for (const endX = x + cell.colSpan; x < endX; ++x)
+					colProgress[x] += cell.rowSpan;
+			}
+		}
+
+		return colHeaders;
+	}
+
 	constructor(table, options) {
-		this.headerCells = table.tHead.rows[options.headerRow || 0].cells;
+		this.headerCells = TableSorter.getColumnHeaders(table.tHead);
+		this.widgetCells = options.widgetsRow !== undefined ? $(table.tHead.rows).filter(options.widgetsRow).prop('cells') : this.headerCells;
 
 		this.source = Array.prototype.flatMap.call(
 			table.tBodies,
@@ -146,33 +172,36 @@ class TableSorter {
 	}
 
 	//----------------------------------------------------------------------------
-	// Bind 2 sort buttons on each column unless its header please the filter (class selector
-	// '.nosort' by default)
+	// Bind 2 sort buttons on each column unless its header matches the exclusion filter
+	// (class selector '.nosort' by default)
 	//
-	bindWidgets(sorter, filter, widgetClass) {
-		$(this.headerCells)
-			.not(filter !== undefined ? filter : '.nosort')
-			.each(function(i, cell) {
-				const $sortWidget = $('<div>')
-					.addClass(widgetClass || 'sort')
-					.append($('<button class="sort-asc" />'))
-					.append($('<button class="sort-desc" />'));
+	bindWidgets(sorter, filter, containerClass) {
+		$(this.headerCells).each(function(colIndex, headerCell) {
+			if (this === undefined) // column without suitable header
+				return;
+			if ($(headerCell).is(filter ?? '.nosort')) // column explicitly excluded
+				return;
 
-				// common settings for ascending and descending buttons
-				$sortWidget.children()
-					.on('click', function() {
-						sorter.sort(
-							$(this).hasClass('sort-on') ? false : cell.cellIndex,
-							$(this).hasClass('sort-asc'));
-					})
-					.attr({
-						type: 'button', // in case the table is in a form
-						title: sorter.hinter,
-					})
-					.text(function() { return this.title; });
+			const $sortWidget = $('<div>')
+				.addClass(containerClass ?? 'sort')
+				.append($('<button class="sort-asc">'))
+				.append($('<button class="sort-desc">'));
 
-				$sortWidget.appendTo(cell);
-			});
+			// common settings for ascending and descending buttons
+			$sortWidget.children()
+				.on('click', function() {
+					sorter.sort(
+						$(this).hasClass('sort-on') ? false : colIndex,
+						$(this).hasClass('sort-asc'));
+				})
+				.attr({
+					type: 'button', // in case the table is in a form
+					title: sorter.hinter,
+				})
+				.text(function() { return this.title; });
+
+			$sortWidget.appendTo(sorter.widgetCells[colIndex]);
+		});
 	}
 
 	//----------------------------------------------------------------------------
@@ -180,14 +209,14 @@ class TableSorter {
 	// if column = false, and update the UI.
 	//
 	sort(column, ascending) {
-		// update the state of header buttons
-		$('.sort-on', this.headerCells)
+		// update the state of widgets
+		$('.sort-on', this.widgetCells)
 			.removeClass('sort-on')
 			.attr('title', this.hinter)
 			.text(function() { return this.title; });
 
 		if (column !== false)
-			$(ascending ? '.sort-asc' : '.sort-desc', this.headerCells[column])
+			$(ascending ? '.sort-asc' : '.sort-desc', this.widgetCells[column])
 				.addClass('sort-on')
 				.attr('title', this.hinter)
 				.text(function() { return this.title; });
