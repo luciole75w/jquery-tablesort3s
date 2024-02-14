@@ -135,9 +135,10 @@ class TableSorter {
 				body.rows,
 				(row) => new SortableRow(row, options.fakeFilter))); // sortable version of the original data
 
+		const hints = Object.assign([], TableSorter.defaultHints, options.hints);
 		this.hinter = function() {
 			const hintIndex = 2 * $(this).hasClass('sort-on') + !$(this).hasClass('sort-asc');
-			return (options.hints || TableSorter.defaultHints)[hintIndex];
+			return hints[hintIndex];
 		};
 
 		if (this.source.length > 1 || options.forceUI)
