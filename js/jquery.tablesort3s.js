@@ -43,7 +43,11 @@ $.fn.extend({
 class SortableRow {
 	constructor(row, fakeFilter) {
 		this.$row = $(row);
-		this.$tbody = this.$row.parent();
+
+		// in sorted state, all rows are moved to the first tbody
+		this.$initialSection = this.$row.parent();
+		this.$sortedSection = this.$initialSection.parent().children('tbody').first();
+
 		this.fake = fakeFilter !== undefined ?
 			this.$row.is(fakeFilter) :
 			this.$row.children().is(function() { return this.colSpan > 1; });
@@ -60,13 +64,14 @@ class SortableRow {
 	}
 
 	//----------------------------------------------------------------------------
-	// Either move the row to the end of tbody or detach it.
+	// Either move the row to the end of the appropriate tbody or detach it.
 	//
-	updateDOM(discardFake) {
-		if (this.fake && discardFake)
+	updateDOM(sorted) {
+		if (this.fake && sorted)
 			this.$row.detach();
 		else
-			this.$row.appendTo(this.$tbody); // already attached so actually set as last child
+			// already attached so actually set as last child
+			this.$row.appendTo(sorted ? this.$sortedSection : this.$initialSection);
 	}
 
 	//----------------------------------------------------------------------------
@@ -124,9 +129,11 @@ class TableSorter {
 	constructor(table, options) {
 		this.headerCells = table.tHead.rows[options.headerRow || 0].cells;
 
-		this.source = $.map(table.tBodies[0].rows, function(row) {
-			return new SortableRow(row, options.fakeFilter); // sortable version of the original data
-		});
+		this.source = Array.prototype.flatMap.call(
+			table.tBodies,
+			(body) => Array.prototype.map.call(
+				body.rows,
+				(row) => new SortableRow(row, options.fakeFilter))); // sortable version of the original data
 
 		this.hinter = function() {
 			const hintIndex = 2 * $(this).hasClass('sort-on') + !$(this).hasClass('sort-asc');
