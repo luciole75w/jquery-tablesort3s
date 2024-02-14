@@ -182,7 +182,7 @@ class TableSorter {
 			if ($(headerCell).is(filter ?? '.nosort')) // column explicitly excluded
 				return;
 
-			const $sortWidget = $('<div>')
+			const $sortWidget = $('<div role="group">')
 				.addClass(containerClass ?? 'sort')
 				.append($('<button class="sort-asc">'))
 				.append($('<button class="sort-desc">'));
@@ -194,6 +194,7 @@ class TableSorter {
 						$(this).hasClass('sort-on') ? false : colIndex,
 						$(this).hasClass('sort-asc'));
 				})
+				.data('tablesort3s-header', headerCell)
 				.attr({
 					type: 'button', // in case the table is in a form
 					title: sorter.hinter,
@@ -209,18 +210,22 @@ class TableSorter {
 	// if column = false, and update the UI.
 	//
 	sort(column, ascending) {
-		// update the state of widgets
+		// update the state of widgets and their corresponding headers
 		$('.sort-on', this.widgetCells)
 			.removeClass('sort-on')
 			.attr('title', this.hinter)
-			.text(function() { return this.title; });
+			.text(function() { return this.title; })
+			.map((_, btn) => $(btn).data('tablesort3s-header'))
+				.attr('aria-sort', null);
 
 		if (column !== false)
 			$(ascending ? '.sort-asc' : '.sort-desc', this.widgetCells[column])
 				.addClass('sort-on')
 				.attr('title', this.hinter)
-				.text(function() { return this.title; });
-		
+				.text(function() { return this.title; })
+				.map((_, btn) => $(btn).data('tablesort3s-header'))
+					.attr('aria-sort', ascending ? 'ascending' : 'descending');
+
 		// sort/unsort the row source in memory
 		this.source.sort(SortableRow.comparator(column, ascending));
 		
