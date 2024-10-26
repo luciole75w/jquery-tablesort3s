@@ -9,8 +9,8 @@ Tables can have **fake** rows, that is non-sortable data, such as group labels o
 Demo
 ------------------
 
-* Simple table : /demo/nutrition.html or [online version](https://plnkr.co/plunk/0Kb7BXNmuOgjD18j)
-* Group headers : /demo/msf-2012.html or [online version](https://plnkr.co/plunk/GB3If0QJ8hPOcMrp)
+* Simple table : /demo/nutrition.html or [online version](https://luciole75w.github.io/demo/jquery-tablesort3s/demo/nutrition.html)
+* Group headers : /demo/msf-2012.html or [online version](https://luciole75w.github.io/demo/jquery-tablesort3s/demo/msf-2012.html)
 
 
 Code examples
